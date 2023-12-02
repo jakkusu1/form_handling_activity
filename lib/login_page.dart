@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form/dashboard_page.dart';
 
 class LoginFormPage extends StatefulWidget {
   const LoginFormPage({super.key});
@@ -9,15 +10,8 @@ class LoginFormPage extends StatefulWidget {
 
 class _LoginFormPageState extends State<LoginFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +21,7 @@ class _LoginFormPageState extends State<LoginFormPage> {
         backgroundColor: Colors.blue,
         leading: const Icon(Icons.code),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      body: Center(
         child: Form(
           key: _formKey,
           child: ListView(
@@ -37,16 +30,14 @@ class _LoginFormPageState extends State<LoginFormPage> {
               TextFormField(
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Enter a Email';
+                    return 'Enter a Username';
                   }
                   return null;
                 },
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
+                controller: nameController,
+                keyboardType: TextInputType.name,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Email Address"
-                ),
+                    border: OutlineInputBorder(), labelText: "Username"),
               ),
               const SizedBox(height: 8),
               TextFormField(
@@ -60,17 +51,25 @@ class _LoginFormPageState extends State<LoginFormPage> {
                 keyboardType: TextInputType.visiblePassword,
                 obscureText: true,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Password"
-                ),
+                    border: OutlineInputBorder(), labelText: "Password"),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
-                  onPressed: () { 
+                  onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print("Email: ${emailController.text}");
+                      print("Email: ${nameController.text}");
                       print("Password: ${passwordController.text}");
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DashboardPage(username: nameController.text),
+                        ),
+                      ).then((_) => {
+                        nameController.clear(),
+                        passwordController.clear(),
+                      });
                     }
                   },
                   child: const Text("Submit"),
